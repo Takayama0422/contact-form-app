@@ -21,8 +21,10 @@ class CategorySeeder extends Seeder
         ];
 
         foreach ($categories as $category) {
-            Category::query()->firstWhere('content', $category)
-                ?? Category::forceCreate(['content' => $category]);
+            Category::query()->updateOrCreate(
+                ['content' => $category],
+                ['content' => $category],
+            );
         }
     }
 }

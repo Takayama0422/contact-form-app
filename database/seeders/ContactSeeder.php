@@ -20,7 +20,7 @@ class ContactSeeder extends Seeder
         $tagIds = Tag::query()->pluck('id');
 
         for ($contactCount = 0; $contactCount < 20; $contactCount++) {
-            $contact = Contact::forceCreate([
+            $contact = Contact::query()->create([
                 'category_id' => $categoryIds->random(),
                 'first_name' => $faker->firstName(),
                 'last_name' => $faker->lastName(),
