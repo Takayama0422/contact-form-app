@@ -21,8 +21,10 @@ class TagSeeder extends Seeder
         ];
 
         foreach ($tags as $tag) {
-            Tag::query()->firstWhere('name', $tag)
-                ?? Tag::forceCreate(['name' => $tag]);
+            Tag::query()->updateOrCreate(
+                ['name' => $tag],
+                ['name' => $tag],
+            );
         }
     }
 }
