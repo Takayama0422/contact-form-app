@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\IndexContactRequest;
+use App\Http\Requests\StoreTagRequest;
+use App\Http\Requests\UpdateTagRequest;
 use App\Models\Category;
 use App\Models\Contact;
 use App\Models\Tag;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class AdminController extends Controller
@@ -44,5 +47,33 @@ class AdminController extends Controller
         return view('admin.show', [
             'contact' => $contact->load(['category', 'tags']),
         ]);
+    }
+
+    public function storeTag(StoreTagRequest $request): RedirectResponse
+    {
+        Tag::create($request->validated());
+
+        return redirect('/admin');
+    }
+
+    public function editTag(Tag $tag): View
+    {
+        return view('admin.tags.edit', [
+            'tag' => $tag,
+        ]);
+    }
+
+    public function updateTag(UpdateTagRequest $request, Tag $tag): RedirectResponse
+    {
+        $tag->update($request->validated());
+
+        return redirect('/admin');
+    }
+
+    public function destroyTag(Tag $tag): RedirectResponse
+    {
+        $tag->delete();
+
+        return redirect('/admin');
     }
 }
