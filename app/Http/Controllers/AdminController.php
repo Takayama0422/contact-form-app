@@ -85,6 +85,13 @@ class AdminController extends Controller
         ]);
     }
 
+    public function destroy(Contact $contact): RedirectResponse
+    {
+        $contact->delete();
+
+        return redirect('/admin');
+    }
+
     public function storeTag(StoreTagRequest $request): RedirectResponse
     {
         Tag::create($request->validated());
