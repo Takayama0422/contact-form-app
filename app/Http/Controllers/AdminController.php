@@ -6,6 +6,8 @@ use App\Http\Requests\IndexContactRequest;
 use App\Models\Category;
 use App\Models\Contact;
 use App\Models\Tag;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class AdminController extends Controller
@@ -44,5 +46,15 @@ class AdminController extends Controller
         return view('admin.show', [
             'contact' => $contact->load(['category', 'tags']),
         ]);
+    }
+
+    public function destroy(Contact $contact): RedirectResponse
+    {
+        DB::transaction(function () use ($contact): void {
+            $contact->tags()->detach();
+            $contact->delete();
+        });
+
+        return redirect('/admin');
     }
 }
