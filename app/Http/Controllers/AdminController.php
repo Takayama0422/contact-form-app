@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\IndexContactRequest;
+use App\Http\Requests\StoreTagRequest;
+use App\Http\Requests\UpdateTagRequest;
 use App\Models\Category;
 use App\Models\Contact;
 use App\Models\Tag;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class AdminController extends Controller
@@ -48,12 +49,30 @@ class AdminController extends Controller
         ]);
     }
 
-    public function destroy(Contact $contact): RedirectResponse
+    public function storeTag(StoreTagRequest $request): RedirectResponse
     {
-        DB::transaction(function () use ($contact): void {
-            $contact->tags()->detach();
-            $contact->delete();
-        });
+        Tag::create($request->validated());
+
+        return redirect('/admin');
+    }
+
+    public function editTag(Tag $tag): View
+    {
+        return view('admin.tags.edit', [
+            'tag' => $tag,
+        ]);
+    }
+
+    public function updateTag(UpdateTagRequest $request, Tag $tag): RedirectResponse
+    {
+        $tag->update($request->validated());
+
+        return redirect('/admin');
+    }
+
+    public function destroyTag(Tag $tag): RedirectResponse
+    {
+        $tag->delete();
 
         return redirect('/admin');
     }
