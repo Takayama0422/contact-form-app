@@ -22,6 +22,7 @@ Route::get('/thanks', [ContactController::class, 'thanks'])->name('contacts.than
 
 Route::middleware('auth')->group(function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('/contacts/export', [AdminController::class, 'export'])->name('contacts.export');
     Route::get('/admin/contacts/{contact}', [AdminController::class, 'show'])->name('admin.contacts.show');
     Route::post('/admin/tags', [AdminController::class, 'storeTag'])->name('admin.tags.store');
     Route::get('/admin/tags/{tag}/edit', [AdminController::class, 'editTag'])->name('admin.tags.edit');
