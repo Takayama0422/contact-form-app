@@ -182,23 +182,23 @@ DB_PASSWORD=password
 #### 4-2. NPM 依存パッケージのインストール
 
 ```bash
-sail npm install
+./vendor/bin/sail npm install
 ```
 
 #### 4-3. Tailwind CSS / Alpine.js のインストール
 
 ```bash
-sail npm install -D tailwindcss@^3.4.0 postcss autoprefixer
+./vendor/bin/sail npm install -D tailwindcss@^3.4.0 postcss autoprefixer
 ```
 
 ```bash
-sail npm install alpinejs
+./vendor/bin/sail npm install alpinejs
 ```
 
 #### 4-4. 設定ファイルの生成
 
 ```bash
-sail npx tailwindcss init -p
+./vendor/bin/sail npx tailwindcss init -p
 ```
 
 #### 4-5. `tailwind.config.js` の設定
@@ -228,11 +228,7 @@ export default {
 git clone https://github.com/coachtech-prepared-file/Preparedblade-ConfirmationTest-ContactForm.git
 ```
 
-Finder でプロジェクトフォルダを開きます。
-
-```bash
-open .
-```
+````
 
 その後、以下の手順で `resources` ディレクトリを入れ替えます。
 
@@ -242,10 +238,10 @@ open .
 #### 4-7. Vite 開発サーバーの起動
 
 ```bash
-sail npm run dev
-```
+./vendor/bin/sail npm run dev
+````
 
-`saill npm run dev` は起動したままにしてください。
+`./vendor/bin/sail npm run dev` は起動したままにしてください。
 
 ### 5. phpMyAdmin の追加
 
