@@ -52,6 +52,8 @@ class CreateNewUserTest extends TestCase
                 ['name', 'email', 'password'],
                 array_keys($exception->errors())
             );
+            $this->assertSame('お名前を入力してください', $exception->errors()['name'][0]);
+            $this->assertContains('パスワードと一致しません', $exception->errors()['password']);
         }
     }
 }

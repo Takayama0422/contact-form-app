@@ -55,6 +55,7 @@ class ContactApiTest extends TestCase
 
         $response->assertUnprocessable();
         $response->assertJsonValidationErrors(['gender', 'per_page', 'page']);
+        $this->assertSame('性別の値が不正です', $response->json('errors.gender.0'));
     }
 
     public function test_contact_detail_is_returned_as_json(): void
@@ -131,6 +132,11 @@ class ContactApiTest extends TestCase
             'detail',
             'tag_ids.0',
         ]);
+        $errors = $response->json('errors');
+        $this->assertSame('性別の値が不正です', $errors['gender'][0]);
+        $this->assertSame('電話番号はハイフンなしの10〜11桁で入力してください', $errors['tel'][0]);
+        $this->assertSame('選択されたカテゴリーが存在しません', $errors['category_id'][0]);
+        $this->assertSame('選択されたタグが存在しません', $errors['tag_ids.0'][0]);
     }
 
     public function test_contact_is_updated_and_returns_json(): void
@@ -191,6 +197,11 @@ class ContactApiTest extends TestCase
             'detail',
             'tag_ids.0',
         ]);
+        $errors = $response->json('errors');
+        $this->assertSame('性別の値が不正です', $errors['gender'][0]);
+        $this->assertSame('電話番号はハイフンなしの10〜11桁で入力してください', $errors['tel'][0]);
+        $this->assertSame('選択されたカテゴリーが存在しません', $errors['category_id'][0]);
+        $this->assertSame('選択されたタグが存在しません', $errors['tag_ids.0'][0]);
     }
 
     public function test_contact_update_not_found_returns_json(): void

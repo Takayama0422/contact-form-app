@@ -145,7 +145,10 @@ class AdminContactTest extends TestCase
      */
     private function createContact(Category $category, array $overrides = []): Contact
     {
-        return Contact::create(array_merge([
+        $timestamps = array_intersect_key($overrides, array_flip(['created_at', 'updated_at']));
+        $attributes = array_diff_key($overrides, $timestamps);
+
+        $contact = Contact::create(array_merge([
             'category_id' => $category->id,
             'first_name' => '山田',
             'last_name' => '太郎',
@@ -155,6 +158,12 @@ class AdminContactTest extends TestCase
             'address' => '東京都渋谷区',
             'building' => null,
             'detail' => 'お問い合わせ内容です。',
-        ], $overrides));
+        ], $attributes));
+
+        if ($timestamps !== []) {
+            $contact->forceFill($timestamps)->save();
+        }
+
+        return $contact;
     }
 }

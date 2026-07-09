@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'confirmed' => ':attributeが確認用と一致しません。',
+    'confirmed' => ':attributeと一致しません',
     'email' => ':attributeはメール形式で入力してください。',
     'max' => [
         'string' => ':attributeは:max文字以内で入力してください。',
