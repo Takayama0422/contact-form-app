@@ -107,6 +107,22 @@ class ContactPageTest extends TestCase
         ]);
     }
 
+    public function test_confirm_page_flashes_input_for_browser_back_correction(): void
+    {
+        $category = Category::create(['content' => '商品トラブル']);
+        $tag = Tag::create(['name' => '不具合報告']);
+        $payload = $this->validContactData($category, [$tag]);
+
+        $response = $this->post('/contacts/confirm', $payload);
+
+        $response->assertOk();
+        $this->assertSame('山田', session()->getOldInput('first_name'));
+        $this->assertSame('太郎', session()->getOldInput('last_name'));
+        $this->assertSame('taro@example.com', session()->getOldInput('email'));
+        $this->assertSame('09012345678', session()->getOldInput('tel'));
+        $this->assertSame([$tag->id], session()->getOldInput('tag_ids'));
+    }
+
     /**
      * @param  array<int, Tag>  $tags
      * @return array<string, mixed>
