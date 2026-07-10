@@ -49,6 +49,24 @@ class ContactApiTest extends TestCase
         $secondPageResponse->assertJsonPath('meta.total', 3);
     }
 
+    public function test_contacts_index_uses_default_per_page_of_twenty(): void
+    {
+        $category = Category::create(['content' => '商品トラブル']);
+
+        foreach (range(1, 21) as $index) {
+            $this->createContact($category, [
+                'email' => "default-per-page-{$index}@example.com",
+            ]);
+        }
+
+        $response = $this->getJson('/api/v1/contacts');
+
+        $response->assertOk();
+        $response->assertJsonCount(20, 'data');
+        $response->assertJsonPath('meta.per_page', 20);
+        $response->assertJsonPath('meta.total', 21);
+    }
+
     public function test_contact_index_validation_error_returns_json(): void
     {
         $response = $this->getJson('/api/v1/contacts?gender=0&per_page=101&page=0');
@@ -83,7 +101,9 @@ class ContactApiTest extends TestCase
         $response = $this->getJson('/api/v1/contacts/999999');
 
         $response->assertNotFound();
-        $response->assertJsonStructure(['message']);
+        $response->assertExactJson([
+            'error' => 'お問い合わせが見つかりませんでした。',
+        ]);
     }
 
     public function test_contact_is_created_and_returns_json(): void
@@ -211,7 +231,9 @@ class ContactApiTest extends TestCase
         $response = $this->putJson('/api/v1/contacts/999999', $this->validPayload($category));
 
         $response->assertNotFound();
-        $response->assertJsonStructure(['message']);
+        $response->assertExactJson([
+            'error' => 'お問い合わせが見つかりませんでした。',
+        ]);
     }
 
     public function test_contact_is_deleted(): void
@@ -230,7 +252,9 @@ class ContactApiTest extends TestCase
         $response = $this->deleteJson('/api/v1/contacts/999999');
 
         $response->assertNotFound();
-        $response->assertJsonStructure(['message']);
+        $response->assertExactJson([
+            'error' => 'お問い合わせが見つかりませんでした。',
+        ]);
     }
 
     /**
