@@ -140,6 +140,53 @@ class AdminContactTest extends TestCase
         $this->assertStringNotContainsString('CSV 対象外', $content);
     }
 
+    public function test_csv_is_downloaded_in_latest_order_without_filters(): void
+    {
+        $user = User::factory()->create();
+        $category = Category::create(['content' => 'その他']);
+
+        $this->createContact($category, [
+            'first_name' => '最古',
+            'last_name' => '一郎',
+            'email' => 'oldest@example.com',
+            'created_at' => '2026-07-08 09:00:00',
+            'updated_at' => '2026-07-08 09:00:00',
+        ]);
+        $this->createContact($category, [
+            'first_name' => '中間',
+            'last_name' => '二郎',
+            'email' => 'middle@example.com',
+            'created_at' => '2026-07-09 09:00:00',
+            'updated_at' => '2026-07-09 09:00:00',
+        ]);
+        $this->createContact($category, [
+            'first_name' => '最新',
+            'last_name' => '三郎',
+            'email' => 'latest@example.com',
+            'created_at' => '2026-07-10 09:00:00',
+            'updated_at' => '2026-07-10 09:00:00',
+        ]);
+
+        $response = $this->actingAs($user)->get('/contacts/export');
+
+        $response->assertOk();
+        $response->assertHeader('content-type', 'text/csv; charset=UTF-8');
+        $response->assertDownload();
+
+        $content = $response->streamedContent();
+        $this->assertStringStartsWith("\xEF\xBB\xBF", $content);
+
+        $rows = array_map(
+            static fn (string $line): array => str_getcsv($line),
+            array_values(array_filter(preg_split("/\r\n|\n|\r/", trim($content)) ?: []))
+        );
+
+        $this->assertCount(4, $rows);
+        $this->assertSame('最新 三郎', $rows[1][1]);
+        $this->assertSame('中間 二郎', $rows[2][1]);
+        $this->assertSame('最古 一郎', $rows[3][1]);
+    }
+
     /**
      * @param  array<string, mixed>  $overrides
      */
