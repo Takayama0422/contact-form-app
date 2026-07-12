@@ -312,6 +312,22 @@ sail artisan migrate:fresh --seed
 
 ---
 
+## テスト実行
+
+PHPUnit
+
+```bash
+./vendor/bin/sail artisan test
+```
+
+Pint
+
+```bash
+./vendor/bin/sail pint
+```
+
+---
+
 ## APIエンドポイント一覧
 
 | メソッド | パス                         | 概要                                               |
